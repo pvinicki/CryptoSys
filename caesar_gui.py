@@ -1,0 +1,48 @@
+import sys
+from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
+from PyQt5 import QtCore
+from frameTemplate import frameTemplate
+import ciphers.caesar as cs
+
+class caesarFrame(frameTemplate):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        super().initUI()
+
+        self.definition.insertPlainText('U kriptografiji, Cezarova šifra jedan je od najjednostavnijih i najrasprostranjenijih načina šifriranja. To je tip šifre zamjene (supstitucije), u kome se svako slovo otvorenog teksta zamjenjuje odgovarajućim slovom abecede, pomaknutim za određeni broj mjesta. Na primjer, s pomakom 3, A se zamjenjuje slovom D, B slovom E itd. Ova metoda je dobila ime po Juliju Cezaru, koji ju je koristio za razmjenu poruka sa svojim generalima.')
+
+        self.cb_method.addItem("Encrypt")
+        self.cb_method.addItem("Decrypt")
+        self.cb_method.currentIndexChanged.connect(self.selectionChange)
+
+        self.btn_encrypt.clicked.connect(self.encrypt)
+
+    def selectionChange(self, index):
+        if (self.cb_method.itemText(index) == "Encrypt"):
+            self.label_plaintext.setText("Plaintext:")
+            self.label_ciphertext.setText("Ciphertext:")
+            self.btn_encrypt.clicked.connect(self.encrypt)
+            self.btn_encrypt.setText("Encrypt")
+            self.plaintext.clear()
+            self.ciphertext.clear()
+
+        elif(self.cb_method.itemText(index) == "Decrypt"):
+            self.label_plaintext.setText("Ciphertext:")
+            self.label_ciphertext.setText("Plaintext:")
+            self.btn_encrypt.clicked.connect(self.decrypt)
+            self.btn_encrypt.setText("Decrypt")
+            self.plaintext.clear()
+            self.ciphertext.clear()
+
+        print("changed")
+
+    def encrypt(self):
+        text = cs.encrypt(self.plaintext.text())
+        self.ciphertext.setText(text)
+
+    def decrypt(self):
+        text = cs.decrypt(self.plaintext.text())
+        self.ciphertext.setText(text)
