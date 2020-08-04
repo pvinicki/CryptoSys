@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 current_row = 0
 current_col = 0
@@ -32,6 +31,7 @@ def encryptPair(matrix, pair):
     
     if(Arow == Brow):
         #zamijeni sa sljedecim u retku
+        #vjerojatno dodati mod 5 za pomicanje stupaca i redaka kako bi se osigurala ciklicnost
         ciphertext += matrix[Arow][Acol + 1]
         ciphertext += matrix[Brow][Bcol + 1]
     elif(Acol == Bcol):

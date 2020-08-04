@@ -13,7 +13,7 @@ class supstitutionFrame(frameTemplate):
     def initUI(self):
         super().initUI()
 
-        self.definition.insertPlainText('U kriptografiji, Cezarova šifra jedan je od najjednostavnijih i najrasprostranjenijih načina šifriranja. To je tip šifre zamjene (supstitucije), u kome se svako slovo otvorenog teksta zamjenjuje odgovarajućim slovom abecede, pomaknutim za određeni broj mjesta. Na primjer, s pomakom 3, A se zamjenjuje slovom D, B slovom E itd. Ova metoda je dobila ime po Juliju Cezaru, koji ju je koristio za razmjenu poruka sa svojim generalima.')
+        self.definition.insertPlainText('Supstitucijska šifra elemente p otvorenog teksta zamjenjuje (supstituira) elementima šifrata c ovisno o ključu k. Element otvorenog teksta može biti slovo (znak) ili niz slova (znakova). ')
 
         self.cb_method.addItem("Encrypt")
         self.cb_method.addItem("Decrypt")

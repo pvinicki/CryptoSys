@@ -11,8 +11,7 @@ def encrypt(plaintext, key):
     plaintext = cv.textToNum(plaintext)
     numKey    = cv.textToNum(key)
     counter = 0
-    print(plaintext)
-    print(numKey)
+
     for letter in plaintext:
         if(counter >= len(key)):
             counter = 0
@@ -21,6 +20,40 @@ def encrypt(plaintext, key):
         counter += 1
     
     return ciphertext
+
+#funkcija šifriranja s autoključem
+def autokeyEncrypt(plaintext, key):
+    ciphertext = ''
+    numKey = []
+    letter_matrix = generateLetterMatrix()
+    
+    plaintext = cv.textToNum(plaintext)
+    numKey    = cv.textToNum(key)
+    
+    counter = 0
+    
+    for letter in numKey:
+        ciphertext += letter_matrix[plaintext[counter]][letter]
+        counter += 1
+        
+    position = counter
+    counter = 0
+    
+    while(position < len(plaintext)):
+        ciphertext += letter_matrix[plaintext[position]][plaintext[counter]]
+        counter += 1
+        position += 1
+        
+    return ciphertext
+
+def autokeyDecrypt(ciphertext, key):
+    plaintext = ''
+    numKey    = []
+
+    letter_matrix = generateLetterMatrix()
+    ciphertext = cv.textToNum(ciphertext)
+    numKey     = cv.textToNum(key)
+    counter = 0
 
 #funkcija dešifriranja
 def decrypt(ciphertext, key):

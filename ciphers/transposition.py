@@ -1,12 +1,20 @@
 import math
 
 def encrypt(plaintext, key):
+    key= key.split(',')
+    for element in key:
+        key[key.index(element)] = int(element)
+        
     rows = math.ceil(len(plaintext)/len(key))
 
     transposition_matrix = generateTranspositonMatrix(plaintext, rows, len(key))     
     return generateCiphertext(transposition_matrix, key)
 
 def decrypt(ciphertext, key):
+    key= key.split(',')
+    for element in key:
+        key[key.index(element)] = int(element)
+        
     rows = math.ceil(len(ciphertext)/len(key))
     matrix = [[0 for x in range(len(key))] for y in range(rows)]
     plaintext = ""
@@ -14,7 +22,7 @@ def decrypt(ciphertext, key):
     column_letters = []
     ordered_letters = []
     
-    #stvori listu slova ciji su elementi slova koja cine jedan stupac
+    #stvori listu slova ciji su elementi slova stupaca
     for letter in ciphertext:         
         buffer += letter
     
@@ -69,7 +77,7 @@ def addPadding(transposition_matrix, padding, row, col):
 
 def generateCiphertext(transposition_matrix, key):
     ciphertext = ''
-    
+    print(key)
     for num in range(1, len(key)+1):
         index = key.index(num)
         

@@ -1,3 +1,3 @@
 {
-    "files": ["frameTemplate.py","mainwindow.ui","caesar_gui.py","supstitutionFrame.py","main.py","vigenereFrame.py"]
+    "files": ["caesar_gui.py","main.py","transpositionFrame.py","vigenereFrame.py","supstitutionFrame.py","mainwindow.ui","frameTemplate.py","playfairFrame.py","onetimepadFrame.py"]
 }

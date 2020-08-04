@@ -1,23 +1,46 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame, QMainWindow)
+import os
+os.chdir('D:\CryptoSys\CryptoSys-20200803T131457Z-001\CryptoSys')
+stylesheet = os.path.abspath('css/stylesheet.css')
 ciphers = ['Cezar', 'Supstitucija', 'Vigenere', 'Playfair','Hill', 'Transpozicija', 'Jednokratna bilj.', 'DES kriptosustav']
-from caesar_gui import caesarFrame
-from supstitutionFrame import supstitutionFrame
+from PyQt5.QtWidgets import (QWidget,QMainWindow, QLineEdit, QLabel,  QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame, QMainWindow)
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
+from caesar_gui         import caesarFrame
+from supstitutionFrame  import supstitutionFrame
+from vigenereFrame      import vigenereFrame
+from playfairFrame      import playfairFrame
+from transpositionFrame import transpositionFrame
+from onetimepadFrame    import onetimepadFrame
 
-class basicWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.grid_layout = QGridLayout()
         self.setWindowTitle('CryptoSys')
-        self.setLayout(self.grid_layout)
         self.buttons = []
 
-        #configuring UI
+        self.initUI()
+
+        self.centralWidget = QWidget()
+        self.centralWidget.setLayout(self.grid_layout)
+        self.setCentralWidget(self.centralWidget)
+
+        self.setStyleSheet(open(stylesheet).read())
+        self.setFixedWidth(600)
+
+    #konfiguracija korisnickog sucelja
     def initUI(self):
         self.frame = caesarFrame()
         self.frame.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
 
         self.v_box = QVBoxLayout()
+        logo = QLabel(self)
+        pixmap = QtGui.QPixmap(os.getcwd() + "/images/logo.png")
+
+        logo.setPixmap(pixmap)
+        self.v_box.addWidget(logo)
+
         for x in range(8):
             self.button = QPushButton(ciphers[x])
             self.buttons.append(self.button)
@@ -39,7 +62,7 @@ class basicWindow(QWidget):
         self.frame.setFrameStyle(QFrame.StyledPanel | QFrame.Plain)
         self.grid_layout.addWidget(self.frame, 0, 1, -1, -1)
 
-    #handler event za odabire gumba koji mijenja frame
+    #handler event za odabire gumba koji mijenjaju trenutni frame
     def buttonClicked(self):
         self.button = self.sender()
         if(self.button.text() == 'Cezar'):
@@ -51,10 +74,25 @@ class basicWindow(QWidget):
             frame = supstitutionFrame()
             self.updateFrame(frame)
 
+        elif(self.button.text() == 'Vigenere'):
+            frame = vigenereFrame()
+            self.updateFrame(frame)
+
+        elif(self.button.text() == 'Playfair'):
+            frame = playfairFrame()
+            self.updateFrame(frame)
+
+        elif(self.button.text() == 'Transpozicija'):
+            frame = transpositionFrame()
+            self.updateFrame(frame)
+
+        elif(self.button.text() == 'Jednokratna bilj.'):
+            frame = onetimepadFrame()
+            self.updateFrame(frame)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = basicWindow()
-    window.initUI()
+    window = MainWindow()
     window.show()
     sys.exit(app.exec_())
