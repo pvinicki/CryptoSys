@@ -3,7 +3,7 @@ import os
 os.chdir('D:\CryptoSys\CryptoSys-20200803T131457Z-001\CryptoSys')
 stylesheet = os.path.abspath('css/stylesheet.css')
 ciphers = ['Cezar', 'Supstitucija', 'Vigenere', 'Playfair','Hill', 'Transpozicija', 'Jednokratna bilj.', 'DES kriptosustav']
-from PyQt5.QtWidgets import (QWidget,QMainWindow, QLineEdit, QLabel,  QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame, QMainWindow)
+from PyQt5.QtWidgets import (QWidget,QMainWindow, QLineEdit, QLabel, QCheckBox,  QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame, QMainWindow)
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from caesar_gui         import caesarFrame
@@ -12,6 +12,7 @@ from vigenereFrame      import vigenereFrame
 from playfairFrame      import playfairFrame
 from transpositionFrame import transpositionFrame
 from onetimepadFrame    import onetimepadFrame
+from hillFrame          import hillFrame
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -26,6 +27,7 @@ class MainWindow(QMainWindow):
         self.centralWidget.setLayout(self.grid_layout)
         self.setCentralWidget(self.centralWidget)
 
+
         self.setStyleSheet(open(stylesheet).read())
         self.setFixedWidth(600)
 
@@ -36,7 +38,7 @@ class MainWindow(QMainWindow):
 
         self.v_box = QVBoxLayout()
         logo = QLabel(self)
-        pixmap = QtGui.QPixmap(os.getcwd() + "/images/logo.png")
+        pixmap = QtGui.QPixmap(os.path.abspath('images/logo.png'))
 
         logo.setPixmap(pixmap)
         self.v_box.addWidget(logo)
@@ -82,6 +84,10 @@ class MainWindow(QMainWindow):
             frame = playfairFrame()
             self.updateFrame(frame)
 
+        elif(self.button.text() == 'Hill'):
+            frame = hillFrame()
+            self.updateFrame(frame)
+
         elif(self.button.text() == 'Transpozicija'):
             frame = transpositionFrame()
             self.updateFrame(frame)
@@ -93,6 +99,8 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon(os.path.abspath('images/icon.png')))
+    #app.setWindowIcon(QtGui.QIcon('://icon.png'))
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())

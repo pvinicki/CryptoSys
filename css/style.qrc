@@ -1,9 +1,9 @@
 <RCC>
-  <qresource>
-    <file>icons/checkbox.png</file>
-    <file>icons/down_arrow.png</file>
-  </qresource>
-  <qresource>
-      <file>stylesheet.css</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>icons/checkbox.png</file>
+        <file>icons/down_arrow.png</file>
+        <file alias="icon.png">icons/icon.png</file>
+        <file>icons/logo.png</file>
+        <file>stylesheet.css</file>
+    </qresource>
 </RCC>

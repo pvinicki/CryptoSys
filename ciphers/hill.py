@@ -1,6 +1,5 @@
 import math
 import converter as cv
-import numpy as np
 
 #funkcija šifriranja
 def encrypt(plaintext, key, m = 3):
@@ -30,7 +29,6 @@ def calculateCipher(letter_vector, key, m):
     ciphertext = ''
     vector = []
     buffer = 0
-    counter = 0
     
     for value in range(len(letter_vector)):
         for col in range(m):
