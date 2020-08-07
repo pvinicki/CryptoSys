@@ -1,7 +1,10 @@
 # This Python file uses the following encoding: utf-8
 import sys
+sys.path.append("resources")
+from strings import vigenere_txt
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from frameTemplate import frameTemplate
 import ciphers.vigenere as vg
 
@@ -14,7 +17,7 @@ class vigenereFrame(frameTemplate):
     def initUI(self):
         super().initUI()
 
-        self.definition.insertPlainText('Supstitucijska šifra elemente p otvorenog teksta zamjenjuje (supstituira) elementima šifrata c ovisno o ključu k. Element otvorenog teksta može biti slovo (znak) ili niz slova (znakova). ')
+        self.definition.insertPlainText(vigenere_txt)
 
         self.cb_method.addItem("Encrypt")
         self.cb_method.addItem("Decrypt")
@@ -25,6 +28,10 @@ class vigenereFrame(frameTemplate):
         self.label_key.setText('Ključ:')
 
         self.key_input = QLineEdit(self)
+
+        regex = QtCore.QRegExp("^[a-zA-Z]+$")
+        validator = QtGui.QRegExpValidator(regex, self.key_input)
+        self.key_input.setValidator(validator)
 
         self.checkbox_autokey = QCheckBox("Autokey")
         self.checkbox_autokey.setChecked(False)
@@ -75,17 +82,34 @@ class vigenereFrame(frameTemplate):
                 self.btn_encrypt.clicked.connect(self.decrypt)
 
     def encrypt(self):
-        text = vg.encrypt(self.plaintext.text(), self.key_input.text())
-        self.ciphertext.setText(text)
+        if(self.validateKey()):
+            text = vg.encrypt(self.plaintext.text(), self.key_input.text())
+            self.ciphertext.setText(text)
+            self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def decrypt(self):
-        text = vg.decrypt(self.plaintext.text(), self.key_input.text())
-        self.ciphertext.setText(text)
+        if(self.validateKey()):
+            text = vg.decrypt(self.plaintext.text(), self.key_input.text())
+            self.ciphertext.setText(text)
+            self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def autokeyEncrypt(self):
-        text = vg.autokeyEncrypt(self.plaintext.text(), self.key_input.text())
-        self.ciphertext.setText(text)
+        if(self.validateKey()):
+            text = vg.autokeyEncrypt(self.plaintext.text(), self.key_input.text())
+            self.ciphertext.setText(text)
+            self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
+
+    def validateKey(self):
+        if(self.key_input.text() == ''):
+            self.key_input.setPlaceholderText("Key is required")
+            self.key_input.setStyleSheet('QLineEdit { border-color: #EC0505 }')
+            return False
+
+        return True
 
     def autokeyDecrypt(self):
-        pass
+        if(self.validateKey()):
+            text = vg.autokeyDecrypt(self.plaintext.text(), self.key_input.text())
+            self.ciphertext.setText(text)
+            self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 

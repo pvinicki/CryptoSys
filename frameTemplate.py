@@ -9,6 +9,7 @@ class frameTemplate(QFrame):
     def initUI(self):
         print('initializing frame template')
         self.definition = QPlainTextEdit()
+        self.definition.setReadOnly(True)
         self.grid_layout = QGridLayout()
 
         #dropdown odabir metode kriptiranja/dekriptiranja

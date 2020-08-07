@@ -1,4 +1,5 @@
 import math
+import binascii
 initialPermutation = [58, 50, 42, 34, 26, 18, 10, 2,
                       60, 52, 44, 36, 28, 20, 12, 4,
                       62, 54, 46, 38, 30, 22, 14, 6,
@@ -38,11 +39,52 @@ straightDBox = [16,  7, 20, 21, 29, 12, 28, 17,
                 19, 13, 30,  6, 22, 11,  4, 25]
 
 #napisat s kutije i sve s kutije staviti u sboxes polje
-S1 = []
+S1 = [[14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7],
+      [ 0, 15,  7,  4, 14,  2, 13, 10,  3,  6, 12, 11,  9,  5,  3,  8],
+      [ 4,  1, 14,  8, 13,  6,  2, 11, 15, 12,  9,  7,  3, 10,  5,  0],
+      [15, 12,  8,  2,  4,  9,  1,  7,  5, 11,  3, 14, 10,  0,  6, 13]]
 
+S2 = [[15,  1,  8, 14,  6, 11,  3,  4,  9,  7,  2, 13, 12,  0,  5, 10],
+      [ 3, 13,  4,  7, 15,  2,  8, 14, 12,  0,  1, 10,  6,  9, 11,  5],
+      [ 0, 14,  7, 11, 10,  4, 13,  1,  5,  8, 12,  6,  9,  3,  2, 15],
+      [13,  8, 10,  1,  3, 15,  4,  2, 11,  6,  7, 12,  0,  5, 14,  9]]
+
+S3 = [[10,  0,  9, 14,  6,  3, 15,  5,  1, 13, 12,  7, 11,  4,  2,  8],
+      [13,  7,  0,  9,  3,  4,  6, 10,  2,  8,  5, 14, 12, 11, 15,  1],
+      [13,  6,  4,  9,  8, 15,  3,  0, 11,  1,  2, 12,  5, 10, 14,  7],
+      [ 1, 10, 13,  0,  6,  9,  8,  7,  4, 15, 14,  3, 11,  5,  2, 12]]
+
+S4 = [[ 7, 13, 14,  3,  0,  6,  9, 10,  1,  2,  8,  5, 11, 12,  4, 15],
+      [13,  8, 11,  5,  6, 15,  0,  3,  4,  7,  2, 12,  1, 10, 14,  9],
+      [10,  6,  9,  0, 12, 11,  7, 13, 15,  1,  3, 14,  5,  2,  8,  4],
+      [ 3, 15,  0,  6, 10,  1, 13,  8,  9,  4,  5, 11, 12,  7,  2, 14]]
+
+S5 = [[ 2, 12,  4,  1,  7, 10, 11,  6,  8,  5,  3, 15, 13,  0, 14,  9],
+      [13, 11,  2, 12,  4,  7, 13,  1,  5,  0, 15, 10,  3,  9,  8,  6],
+      [ 4,  2,  1, 11, 10, 13,  7,  8, 15,  9, 12,  5,  6,  3,  0, 14],
+      [11,  8, 12,  7,  1, 14,  2, 13,  6, 15,  0,  9, 10,  4,  5,  3]]
+
+S6 = [[12,  1, 10, 15,  9,  2,  6,  8,  0, 13,  3,  4, 14,  7,  5, 11],
+      [10, 15,  4,  2,  7, 12,  9,  5,  6,  1, 13, 14,  0, 11,  3,  8],
+      [ 9, 14, 15,  5,  2,  8, 12,  3,  7,  0,  4, 10,  1, 13, 11,  6],
+      [ 4,  3,  2, 12,  9,  5, 15, 10, 11, 14,  1,  7, 10,  0,  8, 13]]
+
+S7 = [[ 4, 11,  2, 14, 15,  0,  8, 13,  3, 12,  9,  7,  5, 10,  6,  1],
+      [13,  0, 11,  7,  4,  9,  1, 10, 14,  3,  5, 12,  2, 15,  8,  6],
+      [ 1,  4, 11, 13, 12,  3,  7, 14, 10, 15,  6,  8,  0,  5,  9,  2],
+      [ 6, 11, 13,  8,  1,  4, 10,  7,  9,  5,  0, 15, 14,  2,  3, 12]]
+
+S8 = [[13,  2,  8,  4,  6, 15, 11,  1, 10,  9,  3, 14,  5,  0, 12,  7],
+      [ 1, 15, 13,  8, 10,  3,  7,  4, 12,  5,  6, 11, 10, 14,  9,  2],
+      [ 7, 11,  4,  1,  9, 12, 14,  2,  0,  6, 10, 10, 15,  3,  5,  8],
+      [ 2,  1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  9,  3,  5,  6, 11]]
+
+sboxes = [S1, S2, S3, S4, S5, S6, S7, S8]
+flag = True
 key_shift = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
 
 def encrypt(plaintext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
+    flag = True
     ciphertext = ''
     buffer = ''
     roundKeys = generateRoundKeys(key)
@@ -55,14 +97,46 @@ def encrypt(plaintext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
         
         if(len(buffer) == 8):
             block = getBlock(buffer)
-            ciphertext += processBlock(block, roundKeys)
+            print("block to encrypt: " + block)
+            ciphertext += processBlock(block, roundKeys, flag)
             buffer = ''
-            
-def processBlock(block, roundKeys):
+    
+    print("encrypted block: " + ciphertext)
+    ciphertext = hex(int(ciphertext, 2))[2:]
+    return ciphertext
+
+#zasto ne radi ?
+def decrypt(ciphertext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
+    flag = False
+    plaintext = ''
+    buffer = ''
+    blocks = []
+    roundKeys = generateRoundKeys(key)
+    roundKeys = list(reversed(roundKeys))
+    
+    ciphertext = bin(int(ciphertext, 16))[2:].zfill(64)
+    
+    for element in ciphertext:
+        buffer += element
+        
+        if(len(buffer) == 64):
+            blocks.append(buffer)
+            print("block to decrpyt: " + buffer)
+            buffer = ''
+    
+    for element in blocks:
+        plaintext += processBlock(element, roundKeys, flag)
+        print("decrypted block: " + plaintext)
+    
+    plaintext= hex(int(plaintext, 2))[2:]
+    return plaintext
+    
+    
+def processBlock(block, roundKeys, flag):
     lbl = ''
     rbl = ''
     temp = ''
-    result = ''
+    encrypted_block = ''
     
     for n in range(32):
         lbl += block[n]
@@ -75,12 +149,18 @@ def processBlock(block, roundKeys):
         lbl = result[0]
         rbl = result[1]
     
-    #krajnja zamjena
-    temp = rbl + lbl
+    if(flag):
+        #krajnja zamjena
+        print("final switch")
+        temp = rbl + lbl
+    else:
+        temp = lbl + rbl
     
     #inverzna permutacija
     for element in finalPermutation:
-        result += temp[element]
+        encrypted_block += temp[element-1]
+    
+    return encrypted_block
             
 def feistelRound(lbl, rbl, key):
     temp = rbl
@@ -132,11 +212,11 @@ def roundFunction(block, key):
     #supstitucija
     for n in range(8):
         row = int((sblocks[n][0] + sblocks[n][5]), 2)
-        col = int((sblocks[n][1] + sblocks[n][2] + sblocks[n][3] + sblocks[n][4]))
+        col = int((sblocks[n][1] + sblocks[n][2] + sblocks[n][3] + sblocks[n][4]), 2)
         sresult += bin(sboxes[n][row][col])[2:].zfill(4)
         
     for element in straightDBox:
-        rbl += sresult[element]
+        rbl += sresult[element-1]
         
     return rbl
         

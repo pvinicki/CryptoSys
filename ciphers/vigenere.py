@@ -38,7 +38,7 @@ def autokeyEncrypt(plaintext, key):
         
     position = counter
     counter = 0
-    
+        
     while(position < len(plaintext)):
         ciphertext += letter_matrix[plaintext[position]][plaintext[counter]]
         counter += 1
@@ -53,7 +53,28 @@ def autokeyDecrypt(ciphertext, key):
     letter_matrix = generateLetterMatrix()
     ciphertext = cv.textToNum(ciphertext)
     numKey     = cv.textToNum(key)
+    
     counter = 0
+    
+    for index in numKey:
+        for letter in alphabet: 
+            if(ciphertext[counter] == alphabet.index(letter_matrix[alphabet.index(letter)][index])):                         
+                plaintext += letter
+                
+        counter += 1
+        
+    position = counter
+    counter = 0
+    
+    while(position < len(ciphertext)):
+        for letter in alphabet: 
+            if(ciphertext[position] == alphabet.index(letter_matrix[alphabet.index(letter)][alphabet.index(plaintext[counter])])):                         
+                plaintext += letter
+        
+        position += 1
+        counter += 1
+    
+    return plaintext
 
 #funkcija dešifriranja
 def decrypt(ciphertext, key):

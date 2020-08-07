@@ -9,7 +9,7 @@ def encrypt(plaintext):
     plaintext = cv.textToNum(plaintext)
     
     for letter in plaintext:
-        ciphertext.append(getEncryptionLetter(letter))
+        ciphertext.append((letter + key) % 26)
         
     return cv.numToText(ciphertext)
 
@@ -20,15 +20,8 @@ def decrypt(ciphertext):
     ciphertext = cv.textToNum(ciphertext)
 
     for letter in ciphertext:
-        plaintext.append(getDecryptionLetter(letter))
+        plaintext.append((letter - key) % 26)
     
     return cv.numToText(plaintext)
     
-#funkcija koja vraća znak šifrata
-def getEncryptionLetter(letter):                       
-    return ((letter + key) % 26)
-    
-#funkcija koja vraća znak otvorenog teksta
-def getDecryptionLetter(letter):     
-    return ((letter - key) % 26)
     

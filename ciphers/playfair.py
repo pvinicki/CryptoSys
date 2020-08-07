@@ -3,10 +3,13 @@ import math
 current_row = 0
 current_col = 0
 alphabet = 'abcdefghijklmnopqrstuvwxyz'
+flag = True
 
 #funkcija za šifriranja
 def encrypt(plaintext):
-    ciphertext = ""
+    ciphertext = ''
+    flag = True
+    
     matrix = generateMatrix(plaintext)
     print(matrix)
     buffer = []
@@ -21,6 +24,22 @@ def encrypt(plaintext):
                         buffer = []
     
     return ciphertext
+
+def decrypt(ciphertext):
+    plaintext = ''
+    flag = False
+    print(matrix)
+    for letter in ciphertext:
+        for row in range(5):
+            for col in range(5):
+                if (matrix[row][col] == letter):
+                    buffer.append([row, col])
+                    
+                    if(len(buffer) == 2):
+                        plaintext += encryptPair(matrix, buffer)
+                        buffer = []
+                        
+    return plaintext
                     
 def encryptPair(matrix, pair):
     ciphertext = ""
@@ -32,12 +51,24 @@ def encryptPair(matrix, pair):
     if(Arow == Brow):
         #zamijeni sa sljedecim u retku
         #vjerojatno dodati mod 5 za pomicanje stupaca i redaka kako bi se osigurala ciklicnost
-        ciphertext += matrix[Arow][Acol + 1]
-        ciphertext += matrix[Brow][Bcol + 1]
+        if(flag):
+            ciphertext += matrix[Arow][(Acol + 1) % 5]
+            ciphertext += matrix[Brow][(Bcol + 1) % 5]
+            
+        else:
+            ciphertext += matrix[Arow][(Acol - 1) % 5]
+            ciphertext += matrix[Brow][(Bcol - 1) % 5]
+            
     elif(Acol == Bcol):
         #zamijeni sa sljedecim u stupcu
-        ciphertext += matrix[Arow + 1][Acol]
-        ciphertext += matrix[Brow + 1][Bcol]
+        if(flag):
+            ciphertext += matrix[(Arow + 1) % 5][Acol]
+            ciphertext += matrix[(Brow + 1) % 5][Bcol]
+            
+        else:
+            ciphertext += matrix[(Arow - 1) % 5][Acol]
+            ciphertext += matrix[(Brow - 1) % 5][Bcol]
+            
     else:
         #zamijeni vrhovima kvadrata kojeg formiraju elementi
         if(Arow < Brow):

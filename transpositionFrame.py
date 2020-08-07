@@ -1,5 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
+sys.path.append("resources")
+from strings import transposition_txt
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
@@ -14,7 +16,7 @@ class transpositionFrame(frameTemplate):
     def initUI(self):
         super().initUI()
 
-        self.definition.insertPlainText('Supstitucijska šifra elemente p otvorenog teksta zamjenjuje (supstituira) elementima šifrata c ovisno o ključu k. Element otvorenog teksta može biti slovo (znak) ili niz slova (znakova). ')
+        self.definition.insertPlainText(transposition_txt)
 
         self.cb_method.addItem("Encrypt")
         self.cb_method.addItem("Decrypt")
