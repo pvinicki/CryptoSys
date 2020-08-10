@@ -17,6 +17,7 @@ from hillFrame          import hillFrame
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.alphabet = 'abcdefghijklmnopqrstuvwxyz'
         self.grid_layout = QGridLayout()
         self.setWindowTitle('CryptoSys')
         self.buttons = []

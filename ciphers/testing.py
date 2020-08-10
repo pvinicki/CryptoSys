@@ -3,15 +3,16 @@ import binascii
 import os
 import sys
 
-sys.path.append("../resources")
+from caesar import Caesar
 
-from strings import caesar
+cs = Caesar('abcdefghijklmnopqrstuvwxyz')
+text = cs.encrypt('patrik')
 
-print(caesar)
+print(text)
+
 #text = des.encrypt('patrikvi', 'EAB234CA5B2D3572')
 #print(text)
 #plaintext = des.decrypt(text, 'EAB234CA5B2D3572')
 #print(plaintext)
 
-print(os.path.join(os.getcwd(), "resources"))
 

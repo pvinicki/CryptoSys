@@ -5,12 +5,13 @@ from strings import transposition_txt
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
-import ciphers.transposition as ts
+from ciphers.transposition import Transposition
 
 
 class transpositionFrame(frameTemplate):
     def __init__(self):
         super().__init__()
+        self.ts = Transposition()
         self.initUI()
 
     def initUI(self):
@@ -32,6 +33,8 @@ class transpositionFrame(frameTemplate):
         self.encryption_v_box.addWidget(self.key_input)
 
     def selectionChange(self, index):
+        self.btn_encrypt.clicked.disconnect()
+
         if (self.cb_method.itemText(index) == "Encrypt"):
             self.label_plaintext.setText("Plaintext:")
             self.label_ciphertext.setText("Ciphertext:")
@@ -49,10 +52,10 @@ class transpositionFrame(frameTemplate):
             self.ciphertext.clear()
 
     def encrypt(self):
-        text = ts.encrypt(self.plaintext.text(), self.key_input.text())
+        text = self.ts.encrypt(self.plaintext.text(), self.key_input.text())
         self.ciphertext.setText(text)
 
     def decrypt(self):
-        text = ts.decrypt(self.plaintext.text(), self.key_input.text())
+        text = self.ts.decrypt(self.plaintext.text(), self.key_input.text())
         self.ciphertext.setText(text)
 
