@@ -6,12 +6,13 @@ from PyQt5.QtWidgets import (QWidget, QCheckBox, QLabel, QSpinBox, QComboBox, QP
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from frameTemplate import frameTemplate
-import ciphers.vigenere as vg
+from ciphers.vigenere import Vigenere
 
 
 class vigenereFrame(frameTemplate):
     def __init__(self):
         super().__init__()
+        self.vg = Vigenere()
         self.initUI()
 
     def initUI(self):
@@ -47,8 +48,10 @@ class vigenereFrame(frameTemplate):
             self.label_ciphertext.setText("Ciphertext:")
 
             if(self.checkbox_autokey.isChecked()):
+                self.btn_encrypt.clicked.disconnect()
                 self.btn_encrypt.clicked.connect(self.autokeyEncrypt)
             else:
+                self.btn_encrypt.clicked.disconnect()
                 self.btn_encrypt.clicked.connect(self.encrypt)
 
             self.btn_encrypt.setText("Encrypt")
@@ -60,8 +63,10 @@ class vigenereFrame(frameTemplate):
             self.label_ciphertext.setText("Plaintext:")
 
             if(self.checkbox_autokey.isChecked()):
+                self.btn_encrypt.clicked.disconnect()
                 self.btn_encrypt.clicked.connect(self.autokeyDecrypt)
             else:
+                self.btn_encrypt.clicked.disconnect()
                 self.btn_encrypt.clicked.connect(self.decrypt)
 
             self.btn_encrypt.setText("Decrypt")
@@ -69,6 +74,8 @@ class vigenereFrame(frameTemplate):
             self.ciphertext.clear()
 
     def stateChange(self):
+        self.btn_encrypt.clicked.disconnect()
+
         if(self.checkbox_autokey.isChecked()):
             if (str(self.cb_method.currentText()) == "Encrypt"):
                 self.btn_encrypt.clicked.connect(self.autokeyEncrypt)
@@ -83,19 +90,19 @@ class vigenereFrame(frameTemplate):
 
     def encrypt(self):
         if(self.validateKey()):
-            text = vg.encrypt(self.plaintext.text(), self.key_input.text())
+            text = self.vg.encrypt(self.plaintext.text(), self.key_input.text())
             self.ciphertext.setText(text)
             self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def decrypt(self):
         if(self.validateKey()):
-            text = vg.decrypt(self.plaintext.text(), self.key_input.text())
+            text = self.vg.decrypt(self.plaintext.text(), self.key_input.text())
             self.ciphertext.setText(text)
             self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def autokeyEncrypt(self):
         if(self.validateKey()):
-            text = vg.autokeyEncrypt(self.plaintext.text(), self.key_input.text())
+            text = self.vg.autokeyEncrypt(self.plaintext.text(), self.key_input.text())
             self.ciphertext.setText(text)
             self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
@@ -109,7 +116,7 @@ class vigenereFrame(frameTemplate):
 
     def autokeyDecrypt(self):
         if(self.validateKey()):
-            text = vg.autokeyDecrypt(self.plaintext.text(), self.key_input.text())
+            text = self.vg.autokeyDecrypt(self.plaintext.text(), self.key_input.text())
             self.ciphertext.setText(text)
             self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 

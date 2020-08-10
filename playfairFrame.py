@@ -4,11 +4,12 @@ from strings import playfair_txt
 from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
-import ciphers.playfair as pf
+from ciphers.playfair import Playfair
 
 class playfairFrame(frameTemplate):
     def __init__(self):
         super().__init__()
+        self.pf = Playfair()
         self.initUI()
 
     def initUI(self):
@@ -21,6 +22,8 @@ class playfairFrame(frameTemplate):
         self.btn_encrypt.clicked.connect(self.encrypt)
 
     def selectionChange(self, index):
+        self.btn_encrypt.clicked.disconnect()
+
         if (self.cb_method.itemText(index) == "Encrypt"):
             self.label_plaintext.setText("Plaintext:")
             self.label_ciphertext.setText("Ciphertext:")
@@ -38,9 +41,23 @@ class playfairFrame(frameTemplate):
             self.ciphertext.clear()
 
     def encrypt(self):
-        text = pf.encrypt(self.plaintext.text())
-        self.ciphertext.setText(text)
+        if(self.validateInput()):
+            text = self.pf.encrypt(self.plaintext.text())
+            self.ciphertext.setText(text)
+            self.plaintext.setPlaceholderText("")
+            self.plaintext.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def decrypt(self):
-        text = pf.decrypt(self.plaintext.text())
-        self.ciphertext.setText(text)
+        if(self.validateInput()):
+            text = self.pf.decrypt(self.plaintext.text())
+            self.ciphertext.setText(text)
+            self.plaintext.setPlaceholderText("")
+            self.plaintext.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
+
+    def validateInput(self):
+        if(self.plaintext.text() == ''):
+            self.plaintext.setPlaceholderText("Input required")
+            self.plaintext.setStyleSheet('QLineEdit { border-color: #EC0505 }')
+            return False
+
+        return True

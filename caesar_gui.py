@@ -4,11 +4,12 @@ from strings import caesar_txt
 from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
-import ciphers.caesar as cs
+from ciphers.caesar import Caesar
 
 class caesarFrame(frameTemplate):
     def __init__(self):
         super().__init__()
+        self.cs = Caesar()
         self.initUI()
 
     def initUI(self):
@@ -23,6 +24,8 @@ class caesarFrame(frameTemplate):
         self.btn_encrypt.clicked.connect(self.encrypt)
 
     def selectionChange(self, index):
+        self.btn_encrypt.clicked.disconnect()
+
         if (self.cb_method.itemText(index) == "Encrypt"):
             self.label_plaintext.setText("Plaintext:")
             self.label_ciphertext.setText("Ciphertext:")
@@ -39,12 +42,10 @@ class caesarFrame(frameTemplate):
             self.plaintext.clear()
             self.ciphertext.clear()
 
-        print("changed")
-
     def encrypt(self):
-        text = cs.encrypt(self.plaintext.text())
+        text = self.cs.encrypt(self.plaintext.text())
         self.ciphertext.setText(text)
 
     def decrypt(self):
-        text = cs.decrypt(self.plaintext.text())
+        text = self.cs.decrypt(self.plaintext.text())
         self.ciphertext.setText(text)

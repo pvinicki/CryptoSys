@@ -1,141 +1,143 @@
 import math
 
-current_row = 0
-current_col = 0
-alphabet = 'abcdefghijklmnopqrstuvwxyz'
-flag = True
+class Playfair:
+    def __init__(self):
+        self.alphabet = 'abcdefghijklmnopqrstuvwxyz'
+        self.matrix = [[0 for x in range(5)] for y in range(5)]  
+        self.current_row = 0
+        self.current_col = 0
+        self.flag = True
+        
+    #funkcija za šifriranja
+    def encrypt(self, plaintext):
+        ciphertext = ''
+        self.flag = True
 
-#funkcija za šifriranja
-def encrypt(plaintext):
-    ciphertext = ''
-    flag = True
-    
-    matrix = generateMatrix(plaintext)
-    print(matrix)
-    buffer = []
-    for letter in plaintext:
-        for row in range(5):
-            for col in range(5):
-                if (matrix[row][col] == letter):
-                    buffer.append([row, col])
-                    
-                    if(len(buffer) == 2):
-                        ciphertext += encryptPair(matrix, buffer)
-                        buffer = []
-    
-    return ciphertext
+        self.generateMatrix(plaintext)
 
-def decrypt(ciphertext):
-    plaintext = ''
-    flag = False
-    print(matrix)
-    for letter in ciphertext:
-        for row in range(5):
-            for col in range(5):
-                if (matrix[row][col] == letter):
-                    buffer.append([row, col])
-                    
-                    if(len(buffer) == 2):
-                        plaintext += encryptPair(matrix, buffer)
-                        buffer = []
+        buffer = []
+        for letter in plaintext:
+            for row in range(5):
+                for col in range(5):
+                    if (self.matrix[row][col] == letter):
+                        buffer.append([row, col])
                         
-    return plaintext
-                    
-def encryptPair(matrix, pair):
-    ciphertext = ""
-    Arow = pair[0][0]
-    Acol = pair[0][1]
-    Brow = pair[1][0]
-    Bcol = pair[1][1]
+                        if(len(buffer) == 2):
+                            ciphertext += self.encryptPair(buffer)
+                            buffer = []
+        print(self.matrix)
+        
+        return ciphertext
     
-    if(Arow == Brow):
-        #zamijeni sa sljedecim u retku
-        #vjerojatno dodati mod 5 za pomicanje stupaca i redaka kako bi se osigurala ciklicnost
-        if(flag):
-            ciphertext += matrix[Arow][(Acol + 1) % 5]
-            ciphertext += matrix[Brow][(Bcol + 1) % 5]
-            
-        else:
-            ciphertext += matrix[Arow][(Acol - 1) % 5]
-            ciphertext += matrix[Brow][(Bcol - 1) % 5]
-            
-    elif(Acol == Bcol):
-        #zamijeni sa sljedecim u stupcu
-        if(flag):
-            ciphertext += matrix[(Arow + 1) % 5][Acol]
-            ciphertext += matrix[(Brow + 1) % 5][Bcol]
-            
-        else:
-            ciphertext += matrix[(Arow - 1) % 5][Acol]
-            ciphertext += matrix[(Brow - 1) % 5][Bcol]
-            
-    else:
-        #zamijeni vrhovima kvadrata kojeg formiraju elementi
-        if(Arow < Brow):
-            ciphertext += matrix[Arow][Bcol]
-            ciphertext += matrix[Brow][Acol]
-        else:
-            ciphertext += matrix[Brow][Acol]
-            ciphertext += matrix[Arow][Bcol]
-    return ciphertext
-    
-#funkcija koja stvara matricu šifriranja
-def generateMatrix(plaintext):
-    matrix = [[0 for x in range(5)] for y in range(5)]      #stvori prazno 2D polje s 25 elemenata
-    padding = [x for x in alphabet if x not in plaintext]   #slova abecede koja nisu u otvorenom tekstu
-    plaintext = plaintext.lower()
-    
-    unique_letters = getUniqueLetters(plaintext)
-    matrix = fillMatrix(matrix, unique_letters)
-    matrix = padMatrix(matrix, padding)
-    
-    return matrix
-  
-#funkcija koja stvara listu jedinstvenih slova otvorenog teksta              
-def getUniqueLetters(plaintext):
-    unique_letters = [];
-    
-    for letter in plaintext:                            
-        if (ord(letter) >= 97 and ord(letter) <= 122):
-            if letter not in unique_letters:
-                unique_letters.append(letter)
-    
-    return unique_letters
-            
-#funkcija koja popunjava matricu jedinstvenim slovima otvorenog teksta
-def fillMatrix(matrix, unique_letters):
-    global current_row
-    global current_col
-    flag = True
-    counter = 0
-    
-    for row in range(5):                               
-        for col in range(5):
-            if (flag != True):
-                current_row = row
-                current_col = col
-                return matrix
-            
-            matrix[row][col] = unique_letters[counter]
-            counter += 1
-            
-            if (counter == len(unique_letters)):
-                flag = False
-
-#funkcija koja dopunjuje matricu slovima abecede
-def padMatrix(matrix, padding):
-    global current_row
-    global current_col
-    counter = 0
-    startPadding = False
-    
-    for row in range(5):
-        for col in range(5):
-            if(row == current_row and col == current_col):
-                startPadding = True
+    def decrypt(self, ciphertext):
+        plaintext = ''
+        self.flag = False
+        
+        buffer = []
+        for letter in ciphertext:
+            for row in range(5):
+                for col in range(5):
+                    if (self.matrix[row][col] == letter):
+                        buffer.append([row, col])
+                        
+                        if(len(buffer) == 2):
+                            plaintext += self.encryptPair(buffer)
+                            buffer = []
+                            
+        return plaintext
+                        
+    def encryptPair(self, pair):
+        ciphertext = ""
+        Arow = pair[0][0]
+        Acol = pair[0][1]
+        Brow = pair[1][0]
+        Bcol = pair[1][1]
+        
+        if(Arow == Brow):
+            #zamijeni sa sljedecim u retku
+            #vjerojatno dodati mod 5 za pomicanje stupaca i redaka kako bi se osigurala ciklicnost
+            if(self.flag):
+                ciphertext += self.matrix[Arow][(Acol + 1) % 5]
+                ciphertext += self.matrix[Brow][(Bcol + 1) % 5]
                 
-            if (startPadding == True):
-                matrix[row][col] = padding[counter]
+            else:
+                ciphertext += self.matrix[Arow][(Acol - 1) % 5]
+                ciphertext += self.matrix[Brow][(Bcol - 1) % 5]
+                
+        elif(Acol == Bcol):
+            #zamijeni sa sljedecim u stupcu
+            if(self.flag):
+                ciphertext += self.matrix[(Arow + 1) % 5][Acol]
+                ciphertext += self.matrix[(Brow + 1) % 5][Bcol]
+                
+            else:
+                ciphertext += self.matrix[(Arow - 1) % 5][Acol]
+                ciphertext += self.matrix[(Brow - 1) % 5][Bcol]
+                
+        else:
+            #zamijeni vrhovima kvadrata kojeg formiraju elementi
+            if(Arow < Brow):
+                ciphertext += self.matrix[Arow][Bcol]
+                ciphertext += self.matrix[Brow][Acol]
+            else:
+                ciphertext += self.matrix[Brow][Acol]
+                ciphertext += self.matrix[Arow][Bcol]
+                
+        return ciphertext
+        
+    #funkcija koja stvara matricu šifriranja
+    def generateMatrix(self, plaintext):
+        padding = [x for x in self.alphabet if x not in plaintext]   #slova abecede koja nisu u otvorenom tekstu
+        plaintext = plaintext.lower()
+        
+        unique_letters = self.getUniqueLetters(plaintext)
+        self.fillMatrix(unique_letters)
+        self.padMatrix(padding)
+        
+      
+    #funkcija koja stvara listu jedinstvenih slova otvorenog teksta              
+    def getUniqueLetters(self, plaintext):
+        unique_letters = [];
+        
+        for letter in plaintext:                            
+            if (letter in self.alphabet):
+                if letter not in unique_letters:
+                    unique_letters.append(letter)
+        
+        return unique_letters
+                
+    #funkcija koja popunjava matricu jedinstvenim slovima otvorenog teksta
+    def fillMatrix(self, unique_letters):
+        flag = True
+        counter = 0
+        
+        for row in range(5):                               
+            for col in range(5):
+                if (flag != True):
+                    self.current_row = row
+                    self.current_col = col
+                    break
+                
+                self.matrix[row][col] = unique_letters[counter]
                 counter += 1
+                
+                if (counter == len(unique_letters)):
+                    flag = False
+            
+            if(flag != True):
+                break
     
-    return matrix
+    #funkcija koja dopunjuje matricu slovima abecede
+    def padMatrix(self, padding):
+        counter = 0
+        startPadding = False
+        
+        for row in range(5):
+            for col in range(5):
+                if(row == self.current_row and col == self.current_col):
+                    startPadding = True
+                    
+                if (startPadding == True):
+                    self.matrix[row][col] = padding[counter]
+                    counter += 1
+        

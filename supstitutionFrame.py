@@ -4,12 +4,13 @@ from strings import supstitution_txt
 from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
-import ciphers.supstitution as sp
+from ciphers.supstitution import Supstitution
 
 
 class supstitutionFrame(frameTemplate):
     def __init__(self):
         super().__init__()
+        self.sp = Supstitution()
         self.initUI()
 
     def initUI(self):
@@ -38,6 +39,8 @@ class supstitutionFrame(frameTemplate):
 
 
     def selectionChange(self, index):
+        self.btn_encrypt.clicked.disconnect()
+
         if (self.cb_method.itemText(index) == "Encrypt"):
             self.label_plaintext.setText("Plaintext:")
             self.label_ciphertext.setText("Ciphertext:")
@@ -63,14 +66,14 @@ class supstitutionFrame(frameTemplate):
             self.ciphertext.clear()
 
     def encrypt(self):
-        text = sp.encrypt(self.plaintext.text(), self.spinbox_key.value())
+        text = self.sp.encrypt(self.plaintext.text(), self.spinbox_key.value())
         self.ciphertext.setText(text)
 
     def decrypt(self):
-        text = sp.decrypt(self.plaintext.text(), self.spinbox_key.value())
+        text = self.sp.decrypt(self.plaintext.text(), self.spinbox_key.value())
         self.ciphertext.setText(text)
 
     def bruteForce(self):
-        text = sp.bruteForce(self.plaintext.text())
+        text = self.sp.bruteForce(self.plaintext.text())
         self.ciphertext.setText(text)
 

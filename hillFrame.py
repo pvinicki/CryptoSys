@@ -5,12 +5,13 @@ from strings import hill_txt
 from PyQt5.QtWidgets import (QWidget, QCheckBox, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
-import ciphers.hill as hl
+from ciphers.hill import Hill
 
 class hillFrame(frameTemplate):
     def __init__(self):
         super().__init__()
         self.inputs = []
+        self.hl = Hill()
         self.initUI()
 
     def initUI(self):
@@ -41,7 +42,7 @@ class hillFrame(frameTemplate):
         self.encryption_v_box.addLayout(self.hbox_key)
 
     def encrypt(self):
-        text = hl.encrypt(self.plaintext.text(), self.getKey())
+        text = self.hl.encrypt(self.plaintext.text(), self.getKey())
         self.ciphertext.setText(text)
 
     def getKey(self):

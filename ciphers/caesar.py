@@ -1,27 +1,31 @@
 import converter as cv
-key = 3
 
-#funkcija šifriranja
-def encrypt(plaintext):    
-    global key                             
-    ciphertext = []
-    plaintext = plaintext.lower()
-    plaintext = cv.textToNum(plaintext)
-    
-    for letter in plaintext:
-        ciphertext.append((letter + key) % 26)
+
+class Caesar:
+    def __init__(self):
+        self.key = 3
         
-    return cv.numToText(ciphertext)
-
-#funkcija dešifriranja
-def decrypt(ciphertext):                            
-    plaintext = []
-    ciphertext = ciphertext.lower()
-    ciphertext = cv.textToNum(ciphertext)
-
-    for letter in ciphertext:
-        plaintext.append((letter - key) % 26)
+    #funkcija šifriranja
+    def encrypt(self, plaintext):    
+        global key                             
+        ciphertext = []
+        plaintext = plaintext.lower()
+        plaintext = cv.textToNum(plaintext)
+        
+        for letter in plaintext:
+            ciphertext.append((letter + self.key) % 26)
+            
+        return cv.numToText(ciphertext)
     
-    return cv.numToText(plaintext)
+    #funkcija dešifriranja
+    def decrypt(self, ciphertext):                            
+        plaintext = []
+        ciphertext = ciphertext.lower()
+        ciphertext = cv.textToNum(ciphertext)
+    
+        for letter in ciphertext:
+            plaintext.append((letter - self.key) % 26)
+        
+        return cv.numToText(plaintext)
     
     
