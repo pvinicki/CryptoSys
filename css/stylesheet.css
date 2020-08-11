@@ -461,7 +461,7 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
 
 QCheckBox::indicator:checked
 {
-    image: url(:/icons/checkbox.png);
+    background-color: '#F10606'
 }
 
 QCheckBox::indicator:disabled, QRadioButton::indicator:disabled

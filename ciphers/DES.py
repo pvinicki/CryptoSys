@@ -1,7 +1,14 @@
 import math
-import binascii
+initialPermutation = [57, 49, 41, 33, 25, 17,  9,
+                       1, 58, 50, 42, 34, 26, 18,
+                      10,  2, 59, 51, 43, 35, 27,
+                      19, 11,  3, 60, 52, 44, 36,
+                      63, 55, 47, 39, 31, 23, 15,
+                       7, 62, 54, 46, 38, 30, 22,
+                      14,  6, 61, 53, 45, 37, 29,
+                      21, 13,  5, 28, 20, 12,  4]
 
-initialPermutation = [58, 50, 42, 34, 26, 18, 10, 2,
+initialPerm       = [58, 50, 42, 34, 26, 18, 10, 2,
                       60, 52, 44, 36, 28, 20, 12, 4,
                       62, 54, 46, 38, 30, 22, 14, 6,
                       64, 56, 48, 40, 32, 24, 16, 8,
@@ -28,11 +35,12 @@ compressionDBox = [14, 17, 11, 24,  1,  5,  3, 28,
 
 expansionDBox = [32,  1,  2,  3,  4,  5,
                   4,  5,  6,  7,  8,  9,
-                  8,  9, 19, 11, 12, 13,
+                  8,  9, 10, 11, 12, 13,
+                 12, 13, 14, 15, 16, 17,
                  16, 17, 18, 19, 20, 21,
                  20, 21, 22, 23, 24, 25,
                  24, 25, 26, 27, 28, 29,
-                 28, 29, 31, 31, 32,  1]
+                 28, 29, 30, 31, 32,  1]
 
 straightDBox = [16,  7, 20, 21, 29, 12, 28, 17,
                  1, 15, 23, 26,  5, 18, 31, 10,
@@ -84,28 +92,51 @@ sboxes = [S1, S2, S3, S4, S5, S6, S7, S8]
 key_shift = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
 flag = True
 
-def encrypt(plaintext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
+def encrypt(plaintext, key, isText, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     flag = True
     ciphertext = ''
     buffer = ''
     roundKeys = generateRoundKeys(key)
     
-    for letter in plaintext:
-        if letter not in alphabet:
-            continue
+    if(isText):
+        for letter in plaintext:
+            if letter not in alphabet:
+                continue
+            else:
+                buffer += letter
+                
+            if(len(buffer) == 8):
+                block = textToBin(buffer)
+                
+                block = permuteBlock(block)
+                ciphertext += processBlock(block, roundKeys, flag)
+                buffer = ''
+    else:
         
-        buffer += letter
-        
-        if(len(buffer) == 8):
-            block = getBlock(buffer)
-            print("block to encrypt: " + block)
-            ciphertext += processBlock(block, roundKeys, flag)
-            buffer = ''
+        for letter in plaintext:
+            
+            buffer += letter
+            
+            if(len(buffer) == 16):
+                print(buffer)
+                block = hexToBin(buffer)
+                
+                block = permuteBlock(block)
+                ciphertext += processBlock(block, roundKeys, flag)
+                buffer = ''
     
     print("encrypted block: " + ciphertext)
     ciphertext = hex(int(ciphertext, 2))[2:]
     return ciphertext
 
+def permuteBlock(block):
+    buffer = ''
+    
+    for element in initialPerm:
+        buffer += block[element - 1]
+        
+    return buffer
+    
 #zasto ne radi ?
 def decrypt(ciphertext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     flag = False
@@ -113,7 +144,6 @@ def decrypt(ciphertext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     buffer = ''
     blocks = []
     roundKeys = generateRoundKeys(key)
-    roundKeys = list(reversed(roundKeys))
     
     ciphertext = bin(int(ciphertext, 16))[2:].zfill(64)
     
@@ -169,6 +199,7 @@ def feistelRound(lbl, rbl, key):
     result = []
     
     rbl = roundFunction(rbl, key)
+    print("rbl result: " + rbl)
     
     #xor lijeve i desne polovice
     lbl = int(lbl, 2)
@@ -176,6 +207,7 @@ def feistelRound(lbl, rbl, key):
     
     rbl = rbl ^ lbl
     rbl = bin(rbl)[2:].zfill(32)
+    
 
     #zamjena
     lbl = temp
@@ -184,6 +216,7 @@ def feistelRound(lbl, rbl, key):
     result.append(rbl)
     
     print("round result: " + ''.join(result))
+    print('\n')
     return result
     
 def roundFunction(block, key):
@@ -195,7 +228,8 @@ def roundFunction(block, key):
     #ekspanzija
     for element in expansionDBox:
         expblock += block[element-1]
-        
+    
+    print("expanded block: " + expblock)
     #XOR s ključem
     expblock = int(expblock, 2)
     key      = int(key, 2)
@@ -211,13 +245,19 @@ def roundFunction(block, key):
         if(len(buffer) == 6):
             sblocks.append(buffer)
             buffer = ''
+    
+    print("6-bit blocks: ")
+    print(sblocks)
+    print("\n")
             
     #supstitucija
     for n in range(8):
         row = int((sblocks[n][0] + sblocks[n][5]), 2)
         col = int((sblocks[n][1] + sblocks[n][2] + sblocks[n][3] + sblocks[n][4]), 2)
         sresult += bin(sboxes[n][row][col])[2:].zfill(4)
-        
+    
+    print("S-box output: " + sresult)
+    
     for element in straightDBox:
         rbl += sresult[element-1]
         
@@ -225,9 +265,15 @@ def roundFunction(block, key):
         
     
         
-def getBlock(text):
-    bin_block = ''.join(format(ord(x), 'b').zfill(8) for x in text)
+def hexToBin(text):
+    bin_block = bin(int(text, 16))[2:].zfill(64)
     #bin_block = bin_block.split(' ')
+    
+    return bin_block
+
+def textToBin(text):
+    bin_block = ''.join(format(ord(x), 'b') for x in text)[2:].zfill(64)
+
     
     return bin_block
 
@@ -254,6 +300,8 @@ def generateRoundKeys(key):
             
         roundKeys.append(buffer)
         
+    print("ROUND KEYS: \n")
+    print(roundKeys)
     return roundKeys
 
 def getShiftedKeys(permuted_key):
@@ -282,7 +330,6 @@ def getShiftedKeys(permuted_key):
         
         temp.append(lh + rh)
      
-    print(temp)
     return temp
 
         
@@ -290,7 +337,10 @@ def rotateLeft(bits, n):
     temp = '1111111111111111111111111111'    
     temp = int(temp, 2)
     
-    return bin((temp & (bits << n)) | int(bin((bits >> (28 - n)))[2:].zfill(28), 2))[2:]
+    fillBits  = int(bin(bits >> (28 - n))[2:].zfill(28),2)
+    leftShift = int(bin(temp & bits << n)[2:].zfill(28),2)
+    
+    return bin(leftShift | fillBits)[2:].zfill(28)
     #key = bin((temp & (key << 2)) | int(bin((key >> (6 - 2)))[2:].zfill(6),2))[2:]
         
     

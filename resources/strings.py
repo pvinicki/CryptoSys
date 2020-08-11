@@ -12,3 +12,4 @@ transposition_txt = 'Transpozicijski kriptosustavi permutiraju elemente otvoreno
 
 onetimepad_txt = 'Jednokratna bilježnica je teoretski apsolutno siguran kriptosustav odnosno nemoguće ga je razbiti kriptoanalizom. Za svaki otvoreni tekst generira se novi potpuno nasumičan ključ jednake duljine. Otvoreni tekst, ključ i šifrat mogu biti niz bitova (znakova) duljine n, pri čemu se šifrat dobiva primjenom logičke operacije „isključivo ili (XOR)“ ili modularnim zbrajanjem između odgovarajućih bitova (znakova) otvorenog teksta i ključa.\n\n Bitno je napomenuti kako ovdje implementirana jednokratna bilježnica NIJE u potpunosti sigurna jer su generirani ključevi PSEUDO NASUMIČNI.'
 
+des_txt = 'DES ili Data Encryption standard je simetričan blokovni kriptosustav koji je prije bio najrašireniji i najpouzdaniji sustav za šifriranje podataka.'

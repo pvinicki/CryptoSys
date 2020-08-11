@@ -14,6 +14,7 @@ from playfairFrame      import playfairFrame
 from transpositionFrame import transpositionFrame
 from onetimepadFrame    import onetimepadFrame
 from hillFrame          import hillFrame
+from desFrame           import desFrame
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -96,6 +97,10 @@ class MainWindow(QMainWindow):
 
         elif(self.button.text() == 'Jednokratna bilj.'):
             frame = onetimepadFrame()
+            self.updateFrame(frame)
+
+        elif(self.button.text() == 'DES kriptosustav'):
+            frame = desFrame()
             self.updateFrame(frame)
 
 
