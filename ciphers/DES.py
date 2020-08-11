@@ -1,5 +1,6 @@
 import math
 import binascii
+
 initialPermutation = [58, 50, 42, 34, 26, 18, 10, 2,
                       60, 52, 44, 36, 28, 20, 12, 4,
                       62, 54, 46, 38, 30, 22, 14, 6,
@@ -80,8 +81,8 @@ S8 = [[13,  2,  8,  4,  6, 15, 11,  1, 10,  9,  3, 14,  5,  0, 12,  7],
       [ 2,  1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  9,  3,  5,  6, 11]]
 
 sboxes = [S1, S2, S3, S4, S5, S6, S7, S8]
-flag = True
 key_shift = [1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
+flag = True
 
 def encrypt(plaintext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     flag = True
@@ -151,10 +152,11 @@ def processBlock(block, roundKeys, flag):
     
     if(flag):
         #krajnja zamjena
-        print("final switch")
         temp = rbl + lbl
     else:
         temp = lbl + rbl
+    
+    print("final switch: " + str(temp))
     
     #inverzna permutacija
     for element in finalPermutation:
@@ -181,6 +183,7 @@ def feistelRound(lbl, rbl, key):
     result.append(lbl)
     result.append(rbl)
     
+    print("round result: " + ''.join(result))
     return result
     
 def roundFunction(block, key):
@@ -247,7 +250,7 @@ def generateRoundKeys(key):
         buffer = ''
         
         for element in compressionDBox:
-            buffer += temp[n][element]
+            buffer += temp[n][element - 1]
             
         roundKeys.append(buffer)
         
@@ -257,6 +260,7 @@ def getShiftedKeys(permuted_key):
     temp = []
     lh = ''
     rh = ''
+    print("permuted key: " + str(permuted_key))
      
     #lijeva polovica kljuca
     for n in range(28):
@@ -273,17 +277,20 @@ def getShiftedKeys(permuted_key):
         rh = int(rh, 2)
         lh = rotateLeft(lh, element)
         rh = rotateLeft(rh, element)
+        print("lh: " + str(lh))
+        print("rh: " + str(rh))
         
         temp.append(lh + rh)
      
+    print(temp)
     return temp
 
         
 def rotateLeft(bits, n):
-    temp = '1111111111111111111111111111111111111111111111111111111111111111'    
+    temp = '1111111111111111111111111111'    
     temp = int(temp, 2)
     
-    return bin((temp & (bits << n)) | int(bin((bits >> (64 - n)))[2:].zfill(64), 2))[2:]
+    return bin((temp & (bits << n)) | int(bin((bits >> (28 - n)))[2:].zfill(28), 2))[2:]
     #key = bin((temp & (key << 2)) | int(bin((key >> (6 - 2)))[2:].zfill(6),2))[2:]
         
     

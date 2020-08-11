@@ -2,6 +2,7 @@ import sys
 import os
 os.chdir('D:\Faks\CryptoSys\CryptoSys')
 stylesheet = os.path.abspath('css/stylesheet.css')
+sys.path.append("resources")
 ciphers = ['Cezar', 'Supstitucija', 'Vigenere', 'Playfair','Hill', 'Transpozicija', 'Jednokratna bilj.', 'DES kriptosustav']
 from PyQt5.QtWidgets import (QWidget,QMainWindow, QLineEdit, QLabel, QCheckBox,  QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame, QMainWindow)
 from PyQt5 import QtGui

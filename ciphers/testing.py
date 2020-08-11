@@ -3,16 +3,10 @@ import binascii
 import os
 import sys
 
-from caesar import Caesar
-
-cs = Caesar('abcdefghijklmnopqrstuvwxyz')
-text = cs.encrypt('patrik')
-
+text = des.encrypt('patrikvi', 'EAB234CA5B2D3572')
 print(text)
-
-#text = des.encrypt('patrikvi', 'EAB234CA5B2D3572')
-#print(text)
 #plaintext = des.decrypt(text, 'EAB234CA5B2D3572')
 #print(plaintext)
 
+print(os.getcwd())
 

@@ -16,7 +16,7 @@ def numToText(numarray, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
         
     return text
 
-def multiNumToText(numarray, alphabet = 'abcdefghijklmnopqrstuvwxyz' ):
+def numArrayToText(numarray, alphabet = 'abcdefghijklmnopqrstuvwxyz' ):
     text = []
     buffer = ''
     for row in range(len(numarray)):

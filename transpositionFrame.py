@@ -1,8 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
-sys.path.append("resources")
 from strings import transposition_txt
-from PyQt5.QtWidgets import (QWidget, QCheckBox, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
+from PyQt5.QtWidgets import (QWidget, QCheckBox, QMessageBox, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
 from frameTemplate import frameTemplate
 from ciphers.transposition import Transposition
@@ -28,6 +27,7 @@ class transpositionFrame(frameTemplate):
         self.label_key.setText('Ključ:')
 
         self.key_input = QLineEdit(self)
+        self.key_input.setInputMask('D,D,D,d,d;_')
 
         self.encryption_v_box.addWidget(self.label_key)
         self.encryption_v_box.addWidget(self.key_input)
@@ -52,10 +52,49 @@ class transpositionFrame(frameTemplate):
             self.ciphertext.clear()
 
     def encrypt(self):
-        text = self.ts.encrypt(self.plaintext.text(), self.key_input.text())
-        self.ciphertext.setText(text)
+        if(self.validateInput() and self.validateKey()):
+            text = self.ts.encrypt(self.plaintext.text(), self.key)
+            self.ciphertext.setText(text)
+            self.plaintext.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def decrypt(self):
-        text = self.ts.decrypt(self.plaintext.text(), self.key_input.text())
-        self.ciphertext.setText(text)
+        if(self.validateInput() and self.validateKey()):
+            text = self.ts.decrypt(self.plaintext.text(), self.key)
+            self.ciphertext.setText(text)
+            self.plaintext.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
+
+    def validateInput(self):
+        if(self.plaintext.text() == ''):
+            self.plaintext.setPlaceholderText("Input required")
+            self.plaintext.setStyleSheet('QLineEdit { border-color: #EC0505 }')
+            return False
+
+        return True
+
+    def validateKey(self):
+        self.key = []
+        self.buffer = (self.key_input.text()).split(',')
+
+        for element in self.buffer:
+            if(element != ''):
+                self.key.append(element)
+
+        for element in self.key:
+            self.key[self.key.index(element)] = int(element)
+
+        print(self.key)
+        for element in range(1, len(self.key) + 1):
+            if element not in self.key:
+                self.showWarning()
+                return False
+
+        return True
+
+    def showWarning(self):
+        self.msg = QMessageBox()
+        self.msg.setIcon(QMessageBox.Critical)
+        self.msg.setText("Invalid key")
+        self.msg.setStandardButtons(QMessageBox.Ok)
+        self.msg.show()
+
 

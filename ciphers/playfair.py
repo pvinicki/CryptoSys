@@ -12,6 +12,9 @@ class Playfair:
     def encrypt(self, plaintext):
         ciphertext = ''
         self.flag = True
+        
+        if(len(plaintext) % 2 != 0):
+            plaintext += 'x'
 
         self.generateMatrix(plaintext)
 
@@ -25,6 +28,8 @@ class Playfair:
                         if(len(buffer) == 2):
                             ciphertext += self.encryptPair(buffer)
                             buffer = []
+                            
+            
         print(self.matrix)
         
         return ciphertext

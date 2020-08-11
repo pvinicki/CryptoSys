@@ -5,10 +5,9 @@ class Transposition:
         self.transposition_matrix = []
     
     def encrypt(self, plaintext, key):
-        key= key.split(',')
-        for element in key:
-            key[key.index(element)] = int(element)
-            
+        #if(math.ceil(len(plaintext)/len(key)) == 1 ):
+        #    return 1
+        
         rows = math.ceil(len(plaintext)/len(key))
     
         self.generateTranspositonMatrix(plaintext, rows, len(key))  
@@ -16,12 +15,18 @@ class Transposition:
         return self.generateCiphertext(key)
     
     def decrypt(self, ciphertext, key):
-        key= key.split(',')
-        for element in key:
-            key[key.index(element)] = int(element)
+        padding = len(ciphertext) % len(key)
+        
+        if(padding != 0):
+            for x in range(len(key) - padding):
+                ciphertext += 'x'
             
+        print(ciphertext)
+        
         rows = math.ceil(len(ciphertext)/len(key))
         matrix = [[0 for x in range(len(key))] for y in range(rows)]
+
+            
         plaintext = ""
         buffer = ""
         column_letters = []
@@ -56,12 +61,9 @@ class Transposition:
         print(self.transposition_matrix)
         padding = (cols * rows) - len(plaintext)
         counter = 0
-        print(rows)
-        print(cols)
-        print(self.transposition_matrix)
+
         for row in range(rows):
             for col in range(cols):
-                print(self.transposition_matrix[row][col])
                 self.transposition_matrix[row][col] = plaintext[counter]
                 
                 counter += 1
@@ -84,7 +86,6 @@ class Transposition:
     
     def generateCiphertext(self, key):
         ciphertext = ''
-        print(key)
         for num in range(1, len(key)+1):
             index = key.index(num)
             
