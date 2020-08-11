@@ -2,15 +2,23 @@ import math
 
 class Transposition:
     def __init__(self):
+        self.alphabet = 'abcdefghijklmnopqrstuvwxyz'
         self.transposition_matrix = []
     
     def encrypt(self, plaintext, key):
         #if(math.ceil(len(plaintext)/len(key)) == 1 ):
         #    return 1
+        text = ''
         
-        rows = math.ceil(len(plaintext)/len(key))
+        for letter in plaintext:
+            if letter not in self.alphabet:
+                continue
+            else:
+                text += letter
+                
+        rows = math.ceil(len(text)/len(key))
     
-        self.generateTranspositonMatrix(plaintext, rows, len(key))  
+        self.generateTranspositonMatrix(text, rows, len(key))  
         
         return self.generateCiphertext(key)
     

@@ -3,7 +3,7 @@ import binascii
 import os
 import sys
 
-text = des.encrypt('0123456789ABCDEF', '133457799BBCDFF1')
+text = des.encrypt('0123456789ABCDEF', '133457799BBCDFF1', False)
 print(text)
 
 result = des.decrypt(text, '133457799BBCDFF1')

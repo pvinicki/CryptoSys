@@ -97,7 +97,11 @@ def encrypt(plaintext, key, isText, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     ciphertext = ''
     buffer = ''
     roundKeys = generateRoundKeys(key)
+    print('roundkeys encrypt: ')
+    print(roundKeys)
+    print('\n')
     
+    #napravi listu blocks u koju dodas sve blokove i onda procesirat
     if(isText):
         for letter in plaintext:
             if letter not in alphabet:
@@ -144,6 +148,10 @@ def decrypt(ciphertext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     buffer = ''
     blocks = []
     roundKeys = generateRoundKeys(key)
+    roundKeys = list(reversed(roundKeys))
+    print('roundkeys decrypt: ')
+    print(roundKeys)
+    print('\n')
     
     ciphertext = bin(int(ciphertext, 16))[2:].zfill(64)
     
@@ -152,10 +160,10 @@ def decrypt(ciphertext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
         
         if(len(buffer) == 64):
             blocks.append(buffer)
-            print("block to decrpyt: " + buffer)
             buffer = ''
     
     for element in blocks:
+        element = permuteBlock(element)
         plaintext += processBlock(element, roundKeys, flag)
         print("decrypted block: " + plaintext)
     
@@ -180,14 +188,8 @@ def processBlock(block, roundKeys, flag):
         lbl = result[0]
         rbl = result[1]
     
-    if(flag):
-        #krajnja zamjena
-        temp = rbl + lbl
-    else:
-        temp = lbl + rbl
-    
-    print("final switch: " + str(temp))
-    
+    temp = rbl + lbl
+        
     #inverzna permutacija
     for element in finalPermutation:
         encrypted_block += temp[element-1]
@@ -199,7 +201,6 @@ def feistelRound(lbl, rbl, key):
     result = []
     
     rbl = roundFunction(rbl, key)
-    print("rbl result: " + rbl)
     
     #xor lijeve i desne polovice
     lbl = int(lbl, 2)
@@ -215,8 +216,6 @@ def feistelRound(lbl, rbl, key):
     result.append(lbl)
     result.append(rbl)
     
-    print("round result: " + ''.join(result))
-    print('\n')
     return result
     
 def roundFunction(block, key):
@@ -229,7 +228,6 @@ def roundFunction(block, key):
     for element in expansionDBox:
         expblock += block[element-1]
     
-    print("expanded block: " + expblock)
     #XOR s ključem
     expblock = int(expblock, 2)
     key      = int(key, 2)
@@ -245,10 +243,7 @@ def roundFunction(block, key):
         if(len(buffer) == 6):
             sblocks.append(buffer)
             buffer = ''
-    
-    print("6-bit blocks: ")
-    print(sblocks)
-    print("\n")
+
             
     #supstitucija
     for n in range(8):
@@ -256,7 +251,6 @@ def roundFunction(block, key):
         col = int((sblocks[n][1] + sblocks[n][2] + sblocks[n][3] + sblocks[n][4]), 2)
         sresult += bin(sboxes[n][row][col])[2:].zfill(4)
     
-    print("S-box output: " + sresult)
     
     for element in straightDBox:
         rbl += sresult[element-1]
@@ -279,7 +273,7 @@ def textToBin(text):
 
         
 def generateRoundKeys(key):
-    roundKeys   = []
+    roundKeys  = []
     temp = []
     permuted_key = ''
      
@@ -299,16 +293,13 @@ def generateRoundKeys(key):
             buffer += temp[n][element - 1]
             
         roundKeys.append(buffer)
-        
-    print("ROUND KEYS: \n")
-    print(roundKeys)
+
     return roundKeys
 
 def getShiftedKeys(permuted_key):
     temp = []
     lh = ''
     rh = ''
-    print("permuted key: " + str(permuted_key))
      
     #lijeva polovica kljuca
     for n in range(28):
@@ -325,8 +316,6 @@ def getShiftedKeys(permuted_key):
         rh = int(rh, 2)
         lh = rotateLeft(lh, element)
         rh = rotateLeft(rh, element)
-        print("lh: " + str(lh))
-        print("rh: " + str(rh))
         
         temp.append(lh + rh)
      

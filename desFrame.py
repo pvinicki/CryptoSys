@@ -94,8 +94,10 @@ class desFrame(frameTemplate):
             self.ciphertext.setText(text)
 
     def decrypt(self):
-        text = des.decrypt(self.plaintext.text())
-        self.ciphertext.setText(text)
+        if(self.validateKey()):
+            text = des.decrypt(self.plaintext.text(), self.key_input.text())
+            self.ciphertext.setText(text)
+            self.key_input.setStyleSheet('QLineEdit { border-color: #1e1e1e }')
 
     def validateKey(self):
         if(len(self.key_input.text()) != 16):
