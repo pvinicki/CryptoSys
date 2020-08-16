@@ -34,6 +34,9 @@ class vigenereFrame(frameTemplate):
         validator = QtGui.QRegExpValidator(regex, self.key_input)
         self.key_input.setValidator(validator)
 
+        text_validator = QtGui.QRegExpValidator(regex, self.plaintext)
+        self.plaintext.setValidator(validator)
+
         self.checkbox_autokey = QCheckBox("Autokey")
         self.checkbox_autokey.setChecked(False)
         self.checkbox_autokey.stateChanged.connect(self.stateChange)

@@ -2,6 +2,7 @@ import sys
 from strings import playfair_txt
 from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from frameTemplate import frameTemplate
 from ciphers.playfair import Playfair
 
@@ -19,6 +20,10 @@ class playfairFrame(frameTemplate):
         self.cb_method.addItem("Decrypt")
         self.cb_method.currentIndexChanged.connect(self.selectionChange)
         self.btn_encrypt.clicked.connect(self.encrypt)
+
+        regex = QtCore.QRegExp("^[a-zA-Z]+$")
+        validator = QtGui.QRegExpValidator(regex, self.plaintext)
+        self.plaintext.setValidator(validator)
 
     def selectionChange(self, index):
         self.btn_encrypt.clicked.disconnect()

@@ -2,6 +2,7 @@ import sys
 from strings import onetimepad_txt
 from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from frameTemplate import frameTemplate
 from ciphers.onetimepad import OneTimePad
 
@@ -24,6 +25,10 @@ class onetimepadFrame(frameTemplate):
 
         self.encryption_v_box.addWidget(self.label_key)
         self.encryption_v_box.addWidget(self.key)
+
+        regex = QtCore.QRegExp("^[a-zA-Z]+$")
+        validator = QtGui.QRegExpValidator(regex, self.plaintext)
+        self.plaintext.setValidator(validator)
 
         self.cb_method.addItem("Encrypt")
         self.btn_encrypt.clicked.connect(self.encrypt)

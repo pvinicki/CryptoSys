@@ -1,5 +1,6 @@
 import sys
 import os
+print(os.getcwd())
 os.chdir('D:\Faks\CryptoSys\CryptoSys')
 stylesheet = os.path.abspath('css/stylesheet.css')
 sys.path.append("resources")

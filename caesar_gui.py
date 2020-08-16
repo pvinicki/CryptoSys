@@ -2,6 +2,7 @@ import sys
 from strings import caesar_txt
 from PyQt5.QtWidgets import (QWidget, QLabel, QSpinBox, QComboBox, QPlainTextEdit, QLineEdit, QHBoxLayout, QVBoxLayout, QGridLayout,QPushButton, QApplication, QFrame)
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from frameTemplate import frameTemplate
 from ciphers.caesar import Caesar
 
@@ -19,6 +20,10 @@ class caesarFrame(frameTemplate):
         self.cb_method.addItem("Encrypt")
         self.cb_method.addItem("Decrypt")
         self.cb_method.currentIndexChanged.connect(self.selectionChange)
+
+        regex = QtCore.QRegExp("^[a-zA-Z]+$")
+        validator = QtGui.QRegExpValidator(regex, self.plaintext)
+        self.plaintext.setValidator(validator)
 
         self.btn_encrypt.clicked.connect(self.encrypt)
 
