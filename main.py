@@ -1,7 +1,7 @@
 import sys
 import os
 print(os.getcwd())
-os.chdir('D:\Faks\CryptoSys\CryptoSys')
+os.chdir(os.getcwd())
 stylesheet = os.path.abspath('css/stylesheet.css')
 sys.path.append("resources")
 ciphers = ['Cezar', 'Supstitucija', 'Vigenere', 'Playfair','Hill', 'Transpozicija', 'Jednokratna bilj.', 'DES kriptosustav']
@@ -76,7 +76,6 @@ class MainWindow(QMainWindow):
             self.updateFrame(frame)
 
         elif(self.button.text() == 'Supstitucija'):
-            print('suptitucija')
             frame = supstitutionFrame()
             self.updateFrame(frame)
 

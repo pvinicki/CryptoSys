@@ -52,6 +52,7 @@ def permuteBlock(block):
         
     return buffer
     
+#zasto ne radi ?
 def decrypt(ciphertext, key, alphabet = 'abcdefghijklmnopqrstuvwxyz'):
     flag = False
     plaintext = ''

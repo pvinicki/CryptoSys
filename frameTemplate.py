@@ -7,7 +7,6 @@ class frameTemplate(QFrame):
         super().__init__()
 
     def initUI(self):
-        print('initializing frame template')
         self.definition = QPlainTextEdit()
         self.definition.setReadOnly(True)
         self.grid_layout = QGridLayout()
