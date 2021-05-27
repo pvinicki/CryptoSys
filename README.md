@@ -5,6 +5,9 @@ CryptoSys is an educational desktop application implementing multiple ciphers an
 cryptosystems including DES. It explains how each cryptosystem works and enables the
 user to encrypt/decrypt arbitrary messages.
 
+![Image](https://i.imgur.com/xn2utWs.png)
+
+
 ## ABOUT
 [These](https://imgur.com/a/FXObWK4) images are pretty self explanatory as to how the application functions. They show each of the implemented ciphers.
 
